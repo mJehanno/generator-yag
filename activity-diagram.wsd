@@ -13,7 +13,6 @@ partition "Project Configuration"{
   endif
   :Commit Convention;
   note: need to handle task runner
-  -[#black]->
 }
 
 partition Architecture {
@@ -42,12 +41,14 @@ partition Database {
   if (Relational)
     :Use an orm ?;
     :Which database?;
-  else (Nosql)
+  elseif (Nosql)
     :Which one ?;
     if (mongo)
       :Use an ODM ?;
     else (other)
     endif
+  else (none)
+    stop
   endif
 }
 
