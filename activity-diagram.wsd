@@ -1,0 +1,55 @@
+@startuml yag
+start
+:Welcome to yeoman;
+partition "Project Configuration"{
+  :Choose a Logger;
+  :You should use environment variables (dotenv);
+  :Which linter do you want ?;
+  if (eslint)
+  :Which Convention;
+  elseif (jslint)
+  :Which Convention;
+  else (none)
+  endif
+  :Commit Convention;
+  note: need to handle task runner
+  -[#black]->
+}
+
+partition Architecture {
+
+  if (Api)
+    :Which router;
+  elseif (MVC)
+    :Which router;
+    :Which Template Engine;
+    :Do you need to handle File upload ?;
+    :This project use inuitCss (link to inuitcss doc);
+    fork
+      :Which preprocessor;
+    fork again
+    endfork
+    :Which css framework (bootstrap/materialize);
+  else (MicroService)
+  endif
+  :Need Caching ?;
+}
+partition test {
+  :Which asserter ?;
+  :Which test Runner ?;
+}
+partition Database {
+  if (Relational)
+    :Use an orm ?;
+    :Which database?;
+  else (Nosql)
+    :Which one ?;
+    if (mongo)
+      :Use an ODM ?;
+    else (other)
+    endif
+  endif
+}
+
+stop
+@enduml
