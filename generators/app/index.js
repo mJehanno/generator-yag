@@ -11,12 +11,72 @@ module.exports = class extends Generator {
     );
 
     const prompts = [
+      // ********************************** Configuration
+      {
+        type: 'input',
+        name: 'appName',
+        message: 'Give a name to your app',
+        default: process.argv[2]
+      },
+      {
+        type: 'list',
+        name: 'logger',
+        message: 'Since console.log() is deprecated we recommend you to use a logger : ',
+        choices: [
+          "Morgan",
+          "Winston"
+        ],
+        default: "Winston"
+      },
       {
         type: 'confirm',
-        name: 'someAnswer',
-        message: 'Would you like to enable this option?',
-        default: true
+        name: 'env',
+        message : 'Do you want to use environment variables ?',
+        default : true
+      },
+      // ********************************** Architecture
+      {
+        type: 'list',
+        name: 'architecture',
+        message: 'Which type of apps do you want to create ?',
+        choices: [
+          'Api',
+          'MVC',
+          'Microservices'
+        ],
+        default:'Api'
+      },
+      // -------------------------
+      {
+        type: 'list',
+        name: 'router',
+        message: '',
+        choices: [
+          'Express',
+          'Feather',
+          'Hapi',
+          'Koa'
+        ],
+        when : (response) =>{
+          return response.architecture === "Api" || response.architecture === "MVC"
+        }
+      },
+      // -------------------------
+      {
+        when : (response) =>{
+          return response.architecture === "MVC"
+        }
+      },
+      // -------------------------
+      {
+        when : (response) =>{
+          return response.architecture === "Microservices"
+        }
       }
+
+      // ********************************** Tests
+
+      // ********************************** Databases
     ];
 
     return this.prompt(prompts).then(props => {
