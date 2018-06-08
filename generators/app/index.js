@@ -18,6 +18,13 @@ module.exports = class extends Generator {
       },
       {
         type: 'list',
+        name: 'packageManager',
+        message: 'Which package manager do you use ?',
+        default: 'Npm',
+        choices: ['Npm', 'Yarn']
+      },
+      {
+        type: 'list',
         name: 'logger',
         message: 'Since console.log() is deprecated we recommend you to use a logger : ',
         choices: ['Morgan', 'Winston'],
@@ -41,7 +48,7 @@ module.exports = class extends Generator {
       {
         type: 'list',
         name: 'router',
-        message: '',
+        message: 'Which router will you use ?',
         choices: ['Express', 'Feather', 'Hapi', 'Koa'],
         when: response => {
           return response.architecture === 'Api' || response.architecture === 'MVC';
@@ -49,6 +56,29 @@ module.exports = class extends Generator {
       },
       // -------------------------
       {
+        type: 'list',
+        name: 'templateEngine',
+        message: 'Which template engine do you want ?',
+        choices: [
+          'Dust',
+          'Ejs',
+          'Haml',
+          'Handlebar',
+          'Mustache',
+          'Nunjucks',
+          'Pug',
+          'Swig',
+          'None of the above'
+        ],
+        when: response => {
+          return response.architecture === 'MVC';
+        }
+      },
+      {
+        type: 'confirm',
+        message: 'Do you need to handle file upload ?',
+        name: 'fileUpload',
+        default: false,
         when: response => {
           return response.architecture === 'MVC';
         }
@@ -68,6 +98,11 @@ module.exports = class extends Generator {
     return this.prompt(prompts).then(props => {
       // To access props later use this.props.someAnswer;
       this.props = props;
+      const devDependencies = [];
+      const projectDependencies = [];
+
+      this.install(devDependencies, true, this.props.packageManager);
+      this.install(projectDependencies, false, this.props.packageManager);
     });
   }
 
@@ -78,7 +113,25 @@ module.exports = class extends Generator {
     );
   }
 
-  install() {
-    this.installDependencies();
+  install(dependencies, dev, packageManager) {
+    if (dev) {
+      switch (packageManager) {
+        case 'Npm':
+        default:
+          this.npmInstall(dependencies, { 'save-dev': true });
+          break;
+        case 'Yarn':
+          this.yarnInstall(dependencies, { 'save-dev': true });
+      }
+    } else {
+      switch (packageManager) {
+        case 'Npm':
+        default:
+          this.npmInstall(dependencies);
+          break;
+        case 'Yarn':
+          this.yarnInstall(dependencies);
+      }
+    }
   }
 };
