@@ -6,9 +6,7 @@ const yosay = require('yosay');
 module.exports = class extends Generator {
   prompting() {
     // Have Yeoman greet the user.
-    this.log(
-      yosay(`Welcome to the top-notch ${chalk.red('generator-yag')} generator!`)
-    );
+    this.log(yosay(`Welcome to the top-notch ${chalk.red('generator-yag')} generator!`));
 
     const prompts = [
       // ********************************** Configuration
@@ -22,55 +20,43 @@ module.exports = class extends Generator {
         type: 'list',
         name: 'logger',
         message: 'Since console.log() is deprecated we recommend you to use a logger : ',
-        choices: [
-          "Morgan",
-          "Winston"
-        ],
-        default: "Winston"
+        choices: ['Morgan', 'Winston'],
+        default: 'Winston'
       },
       {
         type: 'confirm',
         name: 'env',
-        message : 'Do you want to use environment variables ?',
-        default : true
+        message: 'Do you want to use environment variables ?',
+        default: true
       },
       // ********************************** Architecture
       {
         type: 'list',
         name: 'architecture',
         message: 'Which type of apps do you want to create ?',
-        choices: [
-          'Api',
-          'MVC',
-          'Microservices'
-        ],
-        default:'Api'
+        choices: ['Api', 'MVC', 'Microservices'],
+        default: 'Api'
       },
       // -------------------------
       {
         type: 'list',
         name: 'router',
         message: '',
-        choices: [
-          'Express',
-          'Feather',
-          'Hapi',
-          'Koa'
-        ],
-        when : (response) =>{
-          return response.architecture === "Api" || response.architecture === "MVC"
+        choices: ['Express', 'Feather', 'Hapi', 'Koa'],
+        when: response => {
+          return response.architecture === 'Api' || response.architecture === 'MVC';
         }
       },
       // -------------------------
       {
-        when : (response) =>{
-          return response.architecture === "MVC"
+        when: response => {
+          return response.architecture === 'MVC';
         }
       },
       // -------------------------
       {
-        when : (response) =>{
-          return response.architecture === "Microservices"
+        when: response => {
+          return response.architecture === 'Microservices';
         }
       }
 
